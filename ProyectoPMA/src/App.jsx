@@ -2,45 +2,79 @@ import { useState } from 'react'
 import './App.css'
 
 function App() {
-  const [operation, setOperation] = useState([])
-  const [input, setInput] = useState([])
+  const [input, setInput] = useState("")
+  const [result, setResult] = useState("")
 
-  console.log(operation)
+  const ops = ['+','-','*','/','%','√','.']
+
+  const actCalc = value => {
+    if(
+      ops.includes(value) && input === '' ||
+      ops.includes(value) && ops.includes(input.slice(-1))
+    ){
+      return
+    }
+      setInput(input + value);
+
+      if(!ops.includes(value)){
+        setResult(eval(input + value).toString());
+      }
+  }
+
+console.log(input)
+
+  const calcular = () =>{
+    setInput(eval(input).toString());
+  }
+  
+  const borrar = () =>{
+      if (input == ''){
+        return;
+      }
+
+      const value = input.slice(0, -1);
+
+      setInput(value)
+  }
+
+  const Raiz = value => {
+      setInput(Math.sqrt(input))
+  }
+
+  const createDigits = () =>{
+    const digits = [];
+
+    for (let i=1;i<10;i++){
+      digits.push(
+        <button  onClick={() => actCalc(i.toString()
+          )}
+        key={i}>{i}</button>
+      )
+    }
+    return digits;
+  }
 
   return (
-    <div className='position-absolute top-50 start-50 translate-middle'>
-      <div className='border border-black p-2 m-2'>
+    <div className='position-absolute top-50 start-50 translate-middle px-9'>
+      <div className='border border-black p-5 m-2'>
         <div className='border border-black px-1'>
-          <label className='px-10' htmlFor="floatingInputValue" placeholder='0'>{input}</label>
+          {input || "0"}
         </div>
         <div>
-          <button name='%' onClick={() => setInput((input) => (`${input}%`))}> % </button>
-          <button name='√' onClick={() => setInput((input) => (`${input}√`))}> √ </button>
-          <button name='/' onClick={() => setInput((input) => (`${input}/`))}> / </button>
-          <button name='*' onClick={() => setInput((input) => (`${input}*`))}> * </button>
+          <button onClick={() => actCalc("/")}>/</button>
+          <button onClick={() => actCalc("*")}>*</button>
+          <button onClick={() => actCalc("-")}>-</button>
+          <button onClick={() => actCalc("+")}>+</button>
+          <button onClick={() => Raiz("√")}>√</button>
+
+          <button onClick={borrar}>C</button>
         </div>
-        <div className="">
-          <button name='7' value={7} onClick={() => setInput((input) => (`${input}7`))}> 7 </button>
-          <button name='8' value={8} onClick={() => setInput((input) => (`${input}8`))}> 8 </button>
-          <button name='9' value={9} onClick={() => setInput((input) => (`${input}9`))}> 9 </button>
-        </div>
-        <div className="">
-          <button name='4' value={4} onClick={() => setInput((input) => (`${input}4`))}> 4 </button>
-          <button name='5' value={5} onClick={() => setInput((input) => (`${input}5`))}> 5 </button>
-          <button name='6' value={6} onClick={() => setInput((input) => (`${input}6`))}> 6 </button>
-          <button name='-' onClick={() => setInput((input) => (`${input}-`))}> - </button>
-        </div>
-        <div>
-          <button name='1' value={1} onClick={() => setInput((input) => (`${input}1`))}> 1 </button>
-          <button name='2' value={2} onClick={() => setInput((input) => (`${input}2`))}> 2 </button>
-          <button name='3' value={3} onClick={() => setInput((input) => (`${input}3`))}> 3 </button>
-          <button name='+' onClick={() => setInput((input) => (`${input}+`))}> + </button> 
-        </div>
-        <div>
-          <button name='C' onClick={() => setInput((input) => (``))}> C </button>
-          <button name='0' value={0} onClick={() => setInput((input) => (`${input}0`))}> 0 </button>
-          <button name='.' value={0.0} onClick={() => setInput((input) => (`${input}.`))}> . </button>
-          <button name='=' onClick={() => setOperation((operation) => (input))}> = </button>
+
+        <div className='container'>
+          {createDigits()}
+          <button onClick={() => actCalc("0")}>0</button>
+          <button onClick={() => actCalc(".")}>.</button>
+          <button onClick={calcular}>=</button>
         </div>
       </div>
     </div>
